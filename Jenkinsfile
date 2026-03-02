@@ -1,34 +1,38 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = "tushartatke7/ecommerce-app"
-    }
-
     stages {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/tushartatke7-art/nodejs-ecommerce-ci-cd.git'
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'npm test'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE:latest .'
+                sh 'docker build -t tushartatke7/ecommerce-app:latest .'
             }
         }
 
-        stage('Push to Docker Hub') {
+        stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-credentials',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
+                withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKER_PASS')]) {
                     sh '''
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                        docker push $DOCKER_IMAGE:latest
+                    echo $DOCKER_PASS | docker login -u tushartatke7 --password-stdin
+                    docker push tushartatke7/ecommerce-app:latest
                     '''
                 }
             }

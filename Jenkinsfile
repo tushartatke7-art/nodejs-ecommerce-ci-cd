@@ -29,13 +29,18 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-password',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
                     sh '''
-                    echo $DOCKER_PASS | docker login -u tushartatke7 --password-stdin
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                     docker push tushartatke7/ecommerce-app:latest
                     '''
                 }
             }
         }
+
     }
 }

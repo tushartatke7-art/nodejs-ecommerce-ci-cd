@@ -23,7 +23,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t tushartatke7/ecommerce-app:latest .'
+                sh 'docker build -t tushartatke7/ecommerce-app:${BUILD_NUMBER} .'
             }
         }
 

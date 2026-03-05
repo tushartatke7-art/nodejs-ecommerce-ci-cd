@@ -9,7 +9,7 @@ const products = [
 ];
 
 app.get('/', (req, res) => {
-  res.send("🛒 Welcome to Tushar's Mini E-Commerce Store");
+  res.send("🛒 Welcome BabyGirl to Tushar's Mini E-Commerce Store");
 });
 
 app.get('/products', (req, res) => {
